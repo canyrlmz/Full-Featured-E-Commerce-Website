@@ -1,0 +1,105 @@
+{% extends 'katalog/base.html' %}
+{% load static %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group sticky-top" style="top: 20px;">
+            <a href="{% url 'profil' %}" class="list-group-item list-group-item-action">
+                Hesabım
+            </a>
+            <a href="{% url 'siparis_listesi' %}" class="list-group-item list-group-item-action active" aria-current="true">
+                Sipariş Geçmişim
+            </a>
+            <a href="{% url 'password_change' %}" class="list-group-item list-group-item-action">
+                Şifremi Değiştir
+            </a>
+            <a href="{% url 'logout' %}" class="list-group-item list-group-item-action text-danger">
+                Çıkış Yap
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <a href="{% url 'siparis_listesi' %}" class="btn btn-link mb-3">← Sipariş Listesine Geri Dön</a>
+        
+        <h1 class="mb-4">Sipariş Detayı #{{ siparis.id }}</h1>
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h5 class="card-title">Sipariş Durumu:
+                            {% if siparis.durum == 'Hazırlanıyor' %}
+                                <span class="badge bg-warning text-dark">{{ siparis.durum }}</span>
+                            {% elif siparis.durum == 'Kargoda' %}
+                                <span class="badge bg-info text-dark">{{ siparis.durum }}</span>
+                            {% elif siparis.durum == 'Tamamlandı' %}
+                                <span class="badge bg-success">{{ siparis.durum }}</span>
+                            {% else %}
+                                <span class="badge bg-secondary">{{ siparis.durum }}</span>
+                            {% endif %}
+                        </h5>
+                        <p class="card-text text-muted">Sipariş Tarihi: {{ siparis.olusturma_tarihi|date:"d M Y, H:i" }}</p>
+                    </div>
+                    <h2 class="text-success fw-bold">{{ siparis.toplam_fiyat|floatformat:2 }} TL</h2>
+                </div>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-light">
+                        Teslimat Bilgileri
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Alıcı Adı:</strong> {{ siparis.ad_soyad }}</p>
+                        <p><strong>E-posta:</strong> {{ siparis.email }}</p>
+                        <p><strong>Adres:</strong> {{ siparis.adres }}</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="col-md-6 mb-4">
+                <div class="card h-100">
+                    <div class="card-header bg-light">
+                        Ödeme Bilgileri
+                    </div>
+                    <div class="card-body">
+                        <p><strong>Ödeme Tipi:</strong> Kart ile ödeme (Simülasyon)</p>
+                        <p><strong>Toplam Tutar:</strong> {{ siparis.toplam_fiyat|floatformat:2 }} TL</p>
+                        <p class="text-muted small">Ödeme bilgileri güvenliğiniz için burada gösterilmemektedir.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h4 class="mt-2 mb-3">Sipariş Edilen Ürünler</h4>
+        
+        <ul class="list-group">
+            {% for oge in siparis_ogeleri %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <a href="{% url 'ayakkabi_detay' oge.varyant.ayakkabi.slug %}" class="fw-bold text-decoration-none">
+                            {{ oge.varyant.ayakkabi.model_adi }}
+                        </a>
+                        <small class="text-muted d-block">Beden: {{ oge.varyant.beden }} | Renk: {{ oge.varyant.renk }}</small>
+                    </div>
+                    <span class="text-nowrap">
+                        {{ oge.miktar }} x {{ oge.fiyat|floatformat:2 }} TL = 
+                        <span class="fw-bold">{{ oge.toplam_fiyat|floatformat:2 }} TL</span>
+                    </span>
+                </li>
+            {% endfor %}
+        </ul>
+        
+        <div class="text-end mt-3 p-3 border-top bg-light">
+            <h4 class="mb-0">Genel Toplam: <span class="text-success fw-bold">{{ siparis.toplam_fiyat|floatformat:2 }} TL</span></h4>
+        </div>
+
+    </div>
+</div>
+
+{% endblock content %}

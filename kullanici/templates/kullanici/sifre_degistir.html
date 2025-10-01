@@ -1,0 +1,40 @@
+{% extends 'katalog/base.html' %} 
+{% load static %}
+
+{% block title %}Şifre Değiştir{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-4">
+                <h1 class="text-center mb-4 text-primary">Şifre Değiştirme</h1>
+                
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- Form alanları -->
+                    <!-- Django, PasswordChangeForm'u otomatik olarak 'form' değişkeni ile gönderir -->
+                    {{ form.as_p }}
+
+                    <button type="submit" class="btn btn-primary w-100 mt-3">Şifreyi Güncelle</button>
+                </form>
+
+                <!-- Formda hata varsa mesajları göster -->
+                {% if form.errors %}
+                    <div class="alert alert-danger mt-3" role="alert">
+                        <strong>Hata:</strong> Lütfen formdaki hataları düzeltin.
+                        <ul>
+                        {% for field, errors in form.errors.items %}
+                            {% for error in errors %}
+                                <li>{{ field|title }}: {{ error }}</li>
+                            {% endfor %}
+                        {% endfor %}
+                        </ul>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

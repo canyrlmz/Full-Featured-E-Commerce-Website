@@ -1,0 +1,57 @@
+{% extends "katalog/base.html" %}
+
+{% block content %}
+    <a href="{% url 'ayakkabi_listesi' %}" class="btn btn-link">← Kataloğa Geri Dön</a>
+    
+    <div class="row mt-4">
+        <div class="col-md-5">
+            <div class="card bg-light p-3 text-center">
+                {% if ayakkabi.resim %}
+                    <img src="{{ ayakkabi.resim.url }}" class="img-fluid rounded" alt="{{ ayakkabi.model_adi }}">
+                {% else %}
+                    <div class="text-muted p-5 border" style="height: 300px; line-height: 250px;">RESİM YÜKLENMEDİ</div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <h1 class="display-5">{{ ayakkabi.model_adi }}</h1>
+            <p class="lead text-muted">Marka: <strong>{{ ayakkabi.marka.isim }}</strong></p>
+            
+            <h2 class="text-success my-4">{{ ayakkabi.fiyat|floatformat:2 }} TL</h2>
+
+            <hr>
+            
+            <p>{{ ayakkabi.aciklama }}</p>
+
+            <h4 class="mt-5 mb-3">Mevcut Seçenekler:</h4>
+            
+            <ul class="list-group">
+                {% for varyant in varyantlar %}
+                    <li class="list-group-item d-flex justify-content-between align-items-center">
+                        <div>
+                            Renk: <strong>{{ varyant.renk }}</strong> | 
+                            Beden: <strong>{{ varyant.beden }}</strong> | 
+                            Stok: 
+                            {% if varyant.stok > 0 %}
+                                <span class="badge bg-primary rounded-pill">{{ varyant.stok }}</span>
+                            {% else %}
+                                <span class="badge bg-danger rounded-pill">Tükendi</span>
+                            {% endif %}
+                        </div>
+                        
+                        {% if varyant.stok > 0 %}
+                            <a href="{% url 'sepete_ekle' varyant_id=varyant.id %}" class="btn btn-sm btn-success">
+                                Sepete Ekle
+                            </a>
+                        {% else %}
+                            <button class="btn btn-sm btn-outline-danger" disabled>Tükendi</button>
+                        {% endif %}
+                    </li>
+                {% empty %}
+                    <li class="list-group-item text-danger">Bu ürünün stokta varyantı bulunmamaktadır.</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock content %}

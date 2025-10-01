@@ -1,0 +1,47 @@
+{% extends "katalog/base.html" %}
+
+{% block content %}
+    <h1>Sepetim</h1>
+
+    {% if sepet_ogeleri %}
+        <table class="table table-striped table-hover"> 
+            <thead>
+                <tr>
+                    <th>Ürün</th>
+                    <th>Varyant</th>
+                    <th>Fiyat (Tek)</th>
+                    <th>Miktar</th>
+                    <th>Toplam</th>
+                    <th>İşlem</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for oge in sepet_ogeleri %}
+                <tr>
+                    <td><a href="{% url 'ayakkabi_detay' slug=oge.varyant.ayakkabi.slug %}">{{ oge.varyant.ayakkabi.model_adi }}</a></td>
+                    <td>{{ oge.varyant.renk }} / Beden: {{ oge.varyant.beden }}</td>
+                    <td>{{ oge.varyant.ayakkabi.fiyat|floatformat:2 }} TL</td>
+                    <td class="align-middle">
+                        <a href="{% url 'miktar_azalt' sepet_ogesi_id=oge.id %}" class="btn btn-sm btn-secondary me-1">[-]</a> 
+                        {{ oge.miktar }} 
+                        <a href="{% url 'miktar_artir' sepet_ogesi_id=oge.id %}" class="btn btn-sm btn-secondary ms-1">[+]</a>
+                    </td>
+                    <td>{{ oge.toplam_fiyat|floatformat:2 }} TL</td>
+                    <td>
+                        <a href="{% url 'sepetten_cikar' sepet_ogesi_id=oge.id %}" class="btn btn-sm btn-danger">X Sil</a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <div class="text-end mt-4">
+            <h4 class="mb-3">Sepet Toplamı: <span class="text-success">{{ toplam_fiyat|floatformat:2 }} TL</span></h4>
+            <a href="{% url 'siparis_olustur' %}" class="btn btn-lg btn-success">ÖDEMEYE GEÇ</a>
+        </div>
+    {% else %}
+        <div class="alert alert-info" role="alert">
+            Sepetinizde ürün bulunmamaktadır. <a href="{% url 'ayakkabi_listesi' %}" class="alert-link">Hemen Alışverişe Başla!</a>
+        </div>
+    {% endif %}
+{% endblock content %}

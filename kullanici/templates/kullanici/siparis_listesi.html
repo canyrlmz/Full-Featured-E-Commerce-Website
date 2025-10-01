@@ -1,0 +1,37 @@
+{% extends "katalog/base.html" %}
+
+{% block title %}Siparişlerim{% endblock title %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-10">
+        <h2 class="mb-4">Sipariş Geçmişim</h2>
+
+        {% if siparisler %}
+            <div class="list-group">
+                {% for siparis in siparisler %}
+                    <div class="list-group-item list-group-item-action mb-3 rounded-3 shadow-sm">
+                        <div class="d-flex w-100 justify-content-between">
+                            <h5 class="mb-1">Sipariş #{{ siparis.id }}</h5>
+                            <small class="text-muted">{{ siparis.olusturma_tarihi|date:"d M Y H:i" }}</small>
+                        </div>
+                        <p class="mb-1">
+                            **Toplam Tutar:** <span class="fw-bold text-success">{{ siparis.toplam_tutar|floatformat:2 }} ₺</span>
+                        </p>
+                        <p class="mb-1">
+                            **Durum:** <span class="badge bg-primary">{{ siparis.get_durum_display }}</span>
+                        </p>
+                        <small>
+                            <a href="{% url 'siparis_detay' siparis.id %}" class="text-decoration-none">Detayları Gör &raquo;</a>
+                        </small>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="alert alert-warning text-center" role="alert">
+                Henüz tamamlanmış bir siparişiniz bulunmamaktadır.
+            </div>
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}

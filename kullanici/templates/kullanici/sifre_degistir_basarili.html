@@ -1,0 +1,25 @@
+{% extends 'katalog/base.html' %}
+{% load static %}
+
+{% block title %}Şifre Başarılı{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6">
+            <div class="card shadow-lg p-5 text-center border-success">
+                <i class="fas fa-check-circle fa-5x text-success mb-4"></i>
+                <h1 class="text-success mb-3">Başarılı!</h1>
+                <p class="lead">Şifreniz başarıyla değiştirilmiştir.</p>
+                <p>Güvenliğiniz için hesabınıza yeniden giriş yapmanız tavsiye edilir.</p>
+                
+                <div class="mt-4">
+                    <!-- Kullanıcıyı profil sayfasına veya ana sayfaya geri yönlendirme linki -->
+                    <a href="{% url 'profil' %}" class="btn btn-outline-success me-2">Profile Dön</a>
+                    <a href="{% url 'logout' %}" class="btn btn-danger">Tekrar Giriş Yap</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock content %}

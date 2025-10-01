@@ -1,0 +1,41 @@
+{% extends "katalog/base.html" %}
+
+{% block content %}
+    <h1>Ayakkabı Kataloğu</h1>
+    <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-4">
+        
+        {% for ayakkabi in ayakkabilar %}
+        <div class="col">
+            <div class="card h-100 shadow-sm">
+                
+                {% if ayakkabi.resim %}
+                    <img src="{{ ayakkabi.resim.url }}" class="card-img-top" alt="{{ ayakkabi.model_adi }}" style="height: 250px; object-fit: cover;">
+                {% else %}
+                    <div class="card-img-top text-center bg-light p-5 border-bottom" style="height: 250px; line-height: 150px;">
+                        Resim Yok
+                    </div>
+                {% endif %}
+
+                <div class="card-body d-flex flex-column">
+                    <h5 class="card-title">{{ ayakkabi.marka.isim }} - {{ ayakkabi.model_adi }}</h5>
+                    <p class="card-text text-muted">{{ ayakkabi.aciklama|truncatechars:80 }}</p>
+                    <div class="mt-auto">
+                        <h4 class="text-primary">{{ ayakkabi.fiyat|floatformat:2 }} TL</h4>
+                        
+                        <!-- DÜZELTME BURADA: slug=ayakkabi.slug olarak keyword argümanı verildi -->
+                        <a href="{% url 'ayakkabi_detay' slug=ayakkabi.slug %}" class="btn btn-outline-primary w-100 mt-2">
+                            Detayları Gör ve Sepete Ekle
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% empty %}
+            <div class="col-12">
+                <div class="alert alert-info" role="alert">
+                    Katalogda henüz ayakkabı bulunmamaktadır.
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock content %}

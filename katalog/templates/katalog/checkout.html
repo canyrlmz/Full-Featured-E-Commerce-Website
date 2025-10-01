@@ -1,0 +1,76 @@
+{% extends "katalog/base.html" %}
+{% load static %}
+
+{% block content %}
+    <a href="{% url 'sepeti_goruntule' %}" class="btn btn-link">← Sepete Geri Dön</a>
+    <h1 class="my-4">Ödeme (Checkout)</h1>
+
+    <div class="row">
+        <div class="col-md-7">
+            {% include "katalog/messages.html" %}
+
+            <form method="POST">
+                {% csrf_token %}
+
+                <h2 class="h4 mb-3 border-bottom pb-2">Teslimat Bilgileri</h2>
+                
+                {% for field in form %}
+                    {% if field.name == 'kart_tipi' %}
+                        <h2 class="h4 mt-4 mb-3 border-bottom pb-2">Ödeme Bilgileri (Simülasyon)</h2>
+                    {% endif %}
+
+                    <div class="mb-3">
+                        <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                        
+                        {{ field }}
+                        
+                        {% if field.errors %}
+                            <div class="invalid-feedback d-block">
+                                {% for error in field.errors %}
+                                    {{ error }}
+                                {% endfor %}
+                            </div>
+                        {% endif %}
+                        
+                        {% if field.help_text %}
+                            <div class="form-text">{{ field.help_text }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+                
+                {% if form.non_field_errors %}
+                    <div class="alert alert-danger mt-3">
+                        {% for error in form.non_field_errors %}
+                            {{ error }}
+                        {% endfor %}
+                    </div>
+                {% endif %}
+
+                <div class="d-grid mt-4">
+                    <button type="submit" class="btn btn-success btn-lg">
+                        Siparişi Tamamla ({{ toplam_fiyat|floatformat:2 }} TL)
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-md-5">
+            <div class="card bg-light p-3 sticky-top">
+                <h2 class="h4 mb-3">Sipariş Özeti</h2>
+                <ul class="list-group list-group-flush mb-3">
+                    {% for oge in sepet_ogeleri %}
+                        <li class="list-group-item d-flex justify-content-between align-items-center bg-light">
+                            <span>{{ oge.varyant.ayakkabi.model_adi }} (Beden: {{ oge.varyant.beden }}) x {{ oge.miktar }}</span>
+                            <span class="fw-bold">{{ oge.toplam_fiyat|floatformat:2 }} TL</span>
+                        </li>
+                    {% endfor %}
+                </ul>
+                <hr>
+                <div class="d-flex justify-content-between">
+                    <h5 class="text-dark">Genel Toplam:</h5>
+                    <h5 class="text-success">{{ toplam_fiyat|floatformat:2 }} TL</h5>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}

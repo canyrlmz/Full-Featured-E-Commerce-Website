@@ -1,0 +1,79 @@
+{% extends 'katalog/base.html' %} 
+{% load static %}
+{% block title %}Profil Bilgilerim{% endblock title %}
+
+{% block content %}
+<div class="container my-5">
+    <div class="row justify-content-center">
+        <div class="col-lg-8">
+            <h1 class="text-center mb-5">Profil Bilgilerim</h1>
+            
+            <div class="card shadow-lg p-4">
+                
+                <!-- BAŞARI MESAJLARI -->
+                {% for message in messages %}
+                    <div class="alert alert-{{ message.tags }} alert-dismissible fade show" role="alert">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                {% endfor %}
+
+                <form method="post">
+                    {% csrf_token %}
+                    
+                    <!-- KULLANICI BİLGİLERİ KISMI -->
+                    <div class="mb-4 p-3 border rounded">
+                        <h4 class="text-primary mb-3">Kullanıcı Bilgileri (Ad, Soyad, E-posta)</h4>
+                        
+                        <!-- u_form'daki her bir alanı döngüye alarak Bootstrap ile stil veriyoruz -->
+                        {% for field in u_form %}
+                            <div class="mb-3">
+                                <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                {{ field }}
+                                {% for error in field.errors %}
+                                    <div class="text-danger small">{{ error }}</div>
+                                {% endfor %}
+                            </div>
+                        {% endfor %}
+                    </div>
+                    
+                    <!-- EK PROFİL BİLGİLERİ KISMI -->
+                    <div class="mb-4 p-3 border rounded">
+                        <h4 class="text-primary mb-3">Ek Profil Bilgileri (Adres, Telefon vb.)</h4>
+                        
+                        <!-- p_form'daki her bir alanı döngüye alarak Bootstrap ile stil veriyoruz -->
+                        {% if p_form.fields %}
+                            {% for field in p_form %}
+                                <div class="mb-3">
+                                    <label for="{{ field.id_for_label }}" class="form-label">{{ field.label }}</label>
+                                    {{ field }}
+                                    {% for error in field.errors %}
+                                        <div class="text-danger small">{{ error }}</div>
+                                    {% endfor %}
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <p class="text-muted">Ek profil bilgisi alanı henüz tanımlanmadı. (forms.py dosyasını güncelleyin)</p>
+                        {% endif %}
+                    </div>
+                    
+                    <button type="submit" class="btn btn-success w-100 btn-lg">Bilgileri Güncelle</button>
+                </form>
+
+                <hr class="my-4">
+                
+                <!-- ŞİFRE DEĞİŞTİR BUTONU -->
+                <!-- Bu butonu daha önce URL hatası çözümü için eklemiştik -->
+                <div class="text-center">
+                    <a href="{% url 'password_change' %}" class="btn btn-outline-secondary btn-sm">Şifremi Değiştir</a>
+                </div>
+
+            </div>
+            
+            <!-- SİPARİŞ LİSTESİ (Opsiyonel) -->
+            <!-- Buraya sipariş listesi vb. eklenebilir. -->
+
+        </div>
+    </div>
+</div>
+{% endblock content %}

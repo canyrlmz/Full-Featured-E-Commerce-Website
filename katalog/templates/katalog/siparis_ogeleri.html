@@ -1,0 +1,53 @@
+{% extends "katalog/base.html" %}
+
+{% block content %}
+    <h1 class="display-4 my-4">Siparişiniz Alındı! 🎉</h1>
+    
+    <div class="alert alert-success p-4">
+        Sayın **{{ siparis.ad_soyad|upper }}**, siparişiniz başarıyla alınmıştır. Sipariş numaranızı ve detaylarınızı aşağıda bulabilirsiniz.
+    </div>
+
+    <div class="row">
+        
+        <div class="col-md-5">
+            <div class="card shadow-sm p-4 mb-4">
+                <h2 class="h4 border-bottom pb-2 mb-3">Genel Bilgiler</h2>
+                <p><strong>Sipariş Numarası:</strong> {{ siparis.id }}</p>
+                <p><strong>E-posta:</strong> {{ siparis.email }}</p>
+                <p><strong>Durum:</strong> <span class="badge bg-success">{{ siparis.durum }}</span></p>
+                <hr>
+                <h3 class="h5">Teslimat Adresi:</h3>
+                <p class="text-muted">{{ siparis.adres|linebreaksbr }}</p>
+            </div>
+        </div>
+
+        <div class="col-md-7">
+            <h2 class="h4 border-bottom pb-2 mb-3">Sipariş Edilen Ürünler</h2>
+            <ul class="list-group">
+                {% for oge in siparis_ogeleri %}
+                <li class="list-group-item d-flex justify-content-between align-items-center">
+                    <div>
+                        <strong>{{ oge.varyant.ayakkabi.model_adi }}</strong> 
+                        <span class="text-muted small">({{ oge.varyant.renk }} / Beden: {{ oge.varyant.beden }})</span>
+                    </div>
+                    <div class="text-end">
+                        {{ oge.miktar }} x {{ oge.fiyat|floatformat:2 }} TL <br>
+                        <span class="fw-bold text-dark">{{ oge.alt_toplam|floatformat:2 }} TL</span>
+                    </div>
+                </li>
+                {% endfor %}
+            </ul>
+            
+            <div class="mt-3 p-3 bg-light rounded d-flex justify-content-between">
+                <h4 class="mb-0">Genel Toplam:</h4>
+                <h4 class="mb-0 text-success">{{ siparis.toplam_fiyat|floatformat:2 }} TL</h4>
+            </div>
+        </div>
+    </div>
+
+    <hr class="my-5">
+
+    <a href="{% url 'ayakkabi_listesi' %}" class="btn btn-lg btn-success">
+        Alışverişe Devam Et
+    </a>
+{% endblock content %}

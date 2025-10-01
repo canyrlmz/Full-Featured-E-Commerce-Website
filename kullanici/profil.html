@@ -1,0 +1,66 @@
+{% extends 'katalog/base.html' %}
+
+{% block content %}
+
+<div class="row">
+    <div class="col-md-3">
+        <div class="list-group sticky-top" style="top: 20px;">
+            <a href="{% url 'profil' %}" class="list-group-item list-group-item-action active" aria-current="true">
+                Hesabım
+            </a>
+            <a href="{% url 'siparis_listesi' %}" class="list-group-item list-group-item-action">
+                Sipariş Geçmişim
+            </a>
+            <a href="{% url 'password_change' %}" class="list-group-item list-group-item-action">
+                Şifremi Değiştir
+            </a>
+            <a href="{% url 'logout' %}" class="list-group-item list-group-item-action text-danger">
+                Çıkış Yap
+            </a>
+        </div>
+    </div>
+
+    <div class="col-md-9">
+        <h1 class="mb-4">Merhaba, {{ user.username }}</h1>
+        <p class="lead">Bu alandan hesap bilgilerinizi yönetebilir ve geçmiş siparişlerinizi kontrol edebilirsiniz.</p>
+
+        <hr class="my-4">
+
+        <div class="card shadow-sm mb-4">
+            <div class="card-header bg-primary text-white">
+                <h5 class="mb-0">Kullanıcı Bilgileri</h5>
+            </div>
+            <div class="card-body">
+                <dl class="row">
+                    <dt class="col-sm-3">Kullanıcı Adı:</dt>
+                    <dd class="col-sm-9">{{ user.username }}</dd>
+
+                    <dt class="col-sm-3">E-posta:</dt>
+                    <dd class="col-sm-9">{{ user.email|default:"Belirtilmemiş" }}</dd>
+                    
+                    <dt class="col-sm-3">Üyelik Tarihi:</dt>
+                    <dd class="col-sm-9">{{ user.date_joined|date:"d M Y (H:i)" }}</dd>
+                </dl>
+                
+                <p class="mt-3">
+                    <a href="#" class="btn btn-sm btn-outline-secondary disabled" title="İleride Form ile düzenlenecek">Bilgileri Düzenle</a>
+                </p>
+            </div>
+        </div>
+
+        <div class="card shadow-sm">
+            <div class="card-header bg-secondary text-white">
+                <h5 class="mb-0">Sipariş Geçmişi</h5>
+            </div>
+            <div class="card-body">
+                <p>
+                    Tüm siparişlerinizi detaylı olarak görmek ve takip etmek için **Sipariş Geçmişi** sayfasına gidin.
+                </p>
+                <a href="{% url 'siparis_listesi' %}" class="btn btn-info">Tüm Siparişleri Gör</a>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+{% endblock content %}
